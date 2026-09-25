@@ -15,27 +15,32 @@ zoom_limits <- function(selected_t, pad = 0.15) {
   )
 }
 
+# Slate tone that reads on both light and dark card surfaces; the PNG itself
+# is transparent so the card background (and dark mode) shows through.
+map_neutral <- "#94a3b8"
+
 build_map <- function(backdrop, selected, crs) {
   backdrop_t <- sf::st_transform(backdrop, crs)
   selected_t <- sf::st_transform(selected, crs)
   lims <- zoom_limits(selected_t)
+  palette <- stats::setNames(country_colors, selected$name_display)
+  transparent <- ggplot2::element_rect(fill = "transparent", colour = NA)
 
   ggplot2::ggplot() +
     ggplot2::geom_sf(
       data = backdrop_t,
-      fill = "grey92",
-      color = "white",
+      fill = scales::alpha(map_neutral, 0.28),
+      color = scales::alpha(map_neutral, 0.55),
       linewidth = 0.15
     ) +
     ggplot2::geom_sf(
       data = selected_t,
-      ggplot2::aes(fill = name_display),
+      ggplot2::aes(fill = name_display, color = name_display),
       alpha = 0.5,
-      color = NA
+      linewidth = 0.4
     ) +
-    ggplot2::scale_fill_manual(
-      values = stats::setNames(country_colors, selected$name_display)
-    ) +
+    ggplot2::scale_fill_manual(values = palette) +
+    ggplot2::scale_color_manual(values = palette) +
     ggplot2::coord_sf(
       crs = sf::st_crs(crs),
       xlim = lims$x,
@@ -43,14 +48,28 @@ build_map <- function(backdrop, selected, crs) {
       expand = FALSE
     ) +
     ggplot2::theme_void() +
-    ggplot2::theme(legend.position = "none")
+    ggplot2::theme(
+      legend.position = "none",
+      # graticule makes each projection's geometry visible: Mercator's
+      # parallels spread apart toward the poles, Equal Earth's don't
+      panel.grid.major = ggplot2::element_line(
+        colour = scales::alpha(map_neutral, 0.3),
+        linewidth = 0.2
+      ),
+      plot.background = transparent,
+      panel.background = transparent
+    )
 }
 
-map_panel_ui <- function(id, title) {
+map_panel_ui <- function(id, title, epsg, icon) {
   ns <- shiny::NS(id)
   bslib::card(
     full_screen = TRUE,
-    bslib::card_header(title),
+    bslib::card_header(
+      bsicons::bs_icon(icon),
+      title,
+      shiny::span(class = "epsg", epsg)
+    ),
     shiny::plotOutput(ns("map"))
   )
 }
@@ -69,8 +88,11 @@ map_panel_server <- function(id, backdrop, selected, crs) {
           crs,
           paste(selected()$name_display, collapse = " y ")
         )
-      )
+      ),
+      bg = "transparent"
     ) |>
-      shiny::bindCache(selected(), cache = "app")
+      # crs must be in the key: the app-wide cache is shared by both
+      # module instances, and the output id is not part of the key
+      shiny::bindCache(selected(), crs, cache = "app")
   })
 }

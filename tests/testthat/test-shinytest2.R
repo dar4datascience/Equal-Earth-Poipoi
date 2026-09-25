@@ -35,6 +35,9 @@ test_that("app launches, selects countries, and swaps", {
   outs <- app$get_values(output = c("merc-map", "eq-map"))$output
   expect_match(outs[["merc-map"]]$src, "^data:image/png")
   expect_match(outs[["eq-map"]]$src, "^data:image/png")
+  # regression: the shared plot cache must not serve one projection's
+  # image to the other panel
+  expect_false(identical(outs[["merc-map"]]$src, outs[["eq-map"]]$src))
 
   # swap button restores a consistent state
   app$click("swap")

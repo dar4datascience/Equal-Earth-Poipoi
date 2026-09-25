@@ -28,6 +28,7 @@ carga extensiones.
 | `R/server.R` | lógica del servidor (`app_server`) |
 | `R/mod_map_panel.R` | módulo Shiny del mapa (se usa 2 veces) |
 | `R/info_card.R` | tarjeta de comparación (value boxes + razón) |
+| `R/theme.R` | tema bslib (preset "shiny", Inter + Space Grotesk, reglas Sass compatibles con modo oscuro) |
 | `R/data_prep.R`, `data-raw/prep_data.R` | pipeline DuckDB → `data/countries.rds` |
 | `tests/testthat/` | `testServer()`, integridad de datos, E2E `shinytest2` |
 | `renv.lock` | entorno reproducible (desarrollo + CI) |
@@ -100,7 +101,9 @@ pipeline DuckDB y el zip de origen.
 - **Francia** incluye la Guayana Francesa (así viene en Natural Earth
   `admin_0_countries`), lo que amplía el encuadre de su mapa.
 - **thematic** no se usa: la versión 0.1.8 rompe `geom_sf` con ggplot2 4.x a
-  partir del segundo render.
+  partir del segundo render. En su lugar, los mapas se renderizan como PNG
+  transparentes con un fondo gris pizarra semitransparente, así se ven bien
+  en modo claro y oscuro sin volver a renderizar.
 
 ### Entorno sin `sudo`
 

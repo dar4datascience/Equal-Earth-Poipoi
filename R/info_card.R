@@ -28,19 +28,33 @@ ratio_sentence <- function(selected) {
   }
 }
 
+# "4,3×" — headline number for the ratio callout
+ratio_value <- function(selected) {
+  a <- selected$area_km2[1:2]
+  scales::number(max(a) / min(a), accuracy = 0.1, decimal.mark = ",", suffix = "×")
+}
+
 info_card_ui <- function() {
   bslib::card(
-    bslib::card_header(shiny::textOutput("title_info", inline = TRUE)),
+    bslib::card_header(
+      bsicons::bs_icon("rulers"),
+      shiny::textOutput("title_info", inline = TRUE)
+    ),
     shiny::uiOutput("info")
   )
 }
 
-# Server-side body: two value boxes + ratio sentence.
+# Server-side body: two value boxes + ratio callout.
 info_card_body <- function(selected) {
   boxes <- lapply(seq_len(nrow(selected)), function(i) {
     bslib::value_box(
       title = selected$name_display[i],
-      value = paste0(format_km2(selected$area_km2[i]), " km²"),
+      value = shiny::tagList(
+        format_km2(selected$area_km2[i]),
+        shiny::span(class = "unit", "km²")
+      ),
+      showcase = bsicons::bs_icon("geo-alt-fill"),
+      showcase_layout = "top right",
       theme = if (i == 1) "primary" else "danger"
     )
   })
@@ -51,6 +65,10 @@ info_card_body <- function(selected) {
       bslib::layout_column_wrap,
       c(list(width = 1, fill = FALSE), boxes)
     ),
-    shiny::p(ratio_sentence(selected))
+    shiny::div(
+      class = "ratio-callout",
+      shiny::div(class = "ratio-number", ratio_value(selected)),
+      shiny::div(class = "ratio-text", ratio_sentence(selected))
+    )
   )
 }

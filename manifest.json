@@ -434,6 +434,39 @@
         "RemoteSha": "1.1.5"
       }
     },
+    "bsicons": {
+      "Source": "P3M",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Package": "bsicons",
+        "Title": "Easily Work with 'Bootstrap' Icons",
+        "Version": "0.1.2",
+        "Authors@R": "c(\n    person(\"Carson\", \"Sievert\", , \"carson@posit.co\", role = c(\"cre\", \"aut\"),\n           comment = c(ORCID = \"0000-0002-4958-2844\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\")),\n    person(\"Mark\", \"Otto\", role = \"cph\",\n           comment = \"Bootstrap icons maintainer\")\n  )",
+        "Description": "Easily use 'Bootstrap' icons inside 'Shiny' apps and 'R\n    Markdown' documents. More generally, icons can be inserted in any\n    'htmltools' document through inline 'SVG'.",
+        "License": "MIT + file LICENSE",
+        "URL": "https://github.com/rstudio/bsicons",
+        "BugReports": "https://github.com/rstudio/bsicons/issues",
+        "Depends": "R (>= 2.10)",
+        "Imports": "cli, htmltools, rlang, utils",
+        "Suggests": "bslib, processx, testthat, webshot2, withr",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.2.3",
+        "NeedsCompilation": "no",
+        "Packaged": "2023-11-03 23:29:00 UTC; cpsievert",
+        "Author": "Carson Sievert [cre, aut] (<https://orcid.org/0000-0002-4958-2844>),\n  Posit Software, PBC [cph, fnd],\n  Mark Otto [cph] (Bootstrap icons maintainer)",
+        "Maintainer": "Carson Sievert <carson@posit.co>",
+        "Repository": "RSPM",
+        "Date/Publication": "2023-11-04 00:30:05 UTC",
+        "Built": "R 4.6.0; ; 2026-04-24 21:37:02 UTC; unix",
+        "RemoteType": "standard",
+        "RemotePkgRef": "bsicons",
+        "RemoteRef": "bsicons",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/__linux__/noble/latest",
+        "RemotePkgPlatform": "x86_64-pc-linux-gnu-ubuntu-24.04",
+        "RemoteSha": "0.1.2"
+      }
+    },
     "bslib": {
       "Source": "P3M",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -3540,16 +3573,16 @@
   },
   "files": {
     "app.R": {
-      "checksum": "4797ffd26d07f6f2124140bf3c4ffb57"
+      "checksum": "86ffa1bc255a058ca0b1676a43779e8f"
     },
     "data/countries.rds": {
       "checksum": "e1b28ef4e710d342a409d8df247b9172"
     },
     "R/info_card.R": {
-      "checksum": "1b91d8fd85c90de73414c6a40deaf91b"
+      "checksum": "6f6f8e97627d49e46e3c9947fa354a31"
     },
     "R/mod_map_panel.R": {
-      "checksum": "83083412804dac0fc13b15ccd69ff07b"
+      "checksum": "f4bedb6d48e14d0f91621e916f23ec83"
     },
     "R/server.R": {
       "checksum": "70c821b74c26d215b2119d34e2d75f97"
@@ -3557,8 +3590,11 @@
     "R/sys_deps.R": {
       "checksum": "e471ae3c09685d555f4193fcf05ec046"
     },
+    "R/theme.R": {
+      "checksum": "07c8b6ff710c036806c8de833d47dad4"
+    },
     "renv.lock": {
-      "checksum": "1e962a34e10a8d37f360d62dae36e19b"
+      "checksum": "e2356b7a08113192e5869e247e8c2730"
     }
   },
   "users": null
