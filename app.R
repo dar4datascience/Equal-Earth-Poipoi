@@ -39,7 +39,7 @@ app_sidebar <- bslib::sidebar(
   shiny::selectizeInput(
     "c2", country_label("País 2", country_colors[2]),
     choices = country_choices,
-    selected = "BRA"
+    selected = "USA"
   ),
   shiny::actionButton(
     "swap", "Intercambiar",

@@ -24,7 +24,7 @@ test_that("app launches, selects countries, and swaps", {
 
   # default pair is rendered
   vals <- app$get_values(export = TRUE)
-  expect_setequal(vals$export$countries, c("México", "Brasil"))
+  expect_setequal(vals$export$countries, c("México", "Estados Unidos"))
 
   # selecting another pair updates the exported values
   app$set_inputs(c1 = "JPN", c2 = "FRA", wait_ = TRUE)

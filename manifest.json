@@ -3573,13 +3573,13 @@
   },
   "files": {
     ".posit/publish/deployments/deployment-4UFV.toml": {
-      "checksum": "df6710516060b60bc4983882c6ac7bd4"
+      "checksum": "1f038e49a648268b46027d160544847c"
     },
     ".posit/publish/Equal-Earth-Poipoi-IJR5.toml": {
       "checksum": "90a9a9945d30780ba96efc1795d82f94"
     },
     "app.R": {
-      "checksum": "135f93b1915e39cf63884c3eafca67e1"
+      "checksum": "da3f75495ae07db988d091f480d2f463"
     },
     "data/countries.rds": {
       "checksum": "e1b28ef4e710d342a409d8df247b9172"
