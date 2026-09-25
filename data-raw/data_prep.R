@@ -1,7 +1,7 @@
 # Data preparation for Equal-Earth-Poipoi
 # Downloads Natural Earth 110m countries and reads them through DuckDB's
-# spatial extension (ST_Read over GDAL's /vsizip/), computing true ellipsoidal
-# areas with ST_Area_Spheroid. Used only at build time by
+# spatial extension (ST_Read over GDAL's /vsizip/), computing planar areas
+# under Equal Earth (EPSG:8857). Used only at build time by
 # data-raw/prep_data.R — the app ships the resulting RDS.
 
 ne_url <- "https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip"
@@ -90,7 +90,7 @@ check_areas <- function(world, tolerance = 0.02) {
   invisible(rel_diff)
 }
 
-prepare_countries <- function(zip_path = "data/ne_110m_admin_0_countries.zip",
+prepare_countries <- function(zip_path = "data-raw/ne_110m_admin_0_countries.zip",
                               out_path = "data/countries.rds") {
   download_ne_zip(zip_path)
   world <- read_ne_world(zip_path)

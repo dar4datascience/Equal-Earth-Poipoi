@@ -29,7 +29,7 @@ carga extensiones.
 | `R/mod_map_panel.R` | módulo Shiny del mapa (se usa 2 veces) |
 | `R/info_card.R` | tarjeta de comparación (value boxes + razón) |
 | `R/theme.R` | tema bslib (preset "shiny", Inter + Space Grotesk, reglas Sass compatibles con modo oscuro) |
-| `R/data_prep.R`, `data-raw/prep_data.R` | pipeline DuckDB → `data/countries.rds` |
+| `data-raw/data_prep.R`, `data-raw/prep_data.R` | pipeline DuckDB → `data/countries.rds` (solo build, no se despliega) |
 | `tests/testthat/` | `testServer()`, integridad de datos, E2E `shinytest2` |
 | `renv.lock` | entorno reproducible (desarrollo + CI) |
 | `manifest.json` | artefacto de despliegue que exige Connect Cloud |
@@ -87,8 +87,19 @@ El CI falla si `renv.lock` o `manifest.json` quedan desactualizados.
 los secretos `CONNECT_CLOUD_CLIENT_ID`, `CONNECT_CLOUD_CLIENT_SECRET` y
 `CONNECT_CLOUD_ACCOUNT`. Sin ellos, el job se omite.
 
-`.rscignore` (y los de `R/` y `data/`) excluyen del bundle los tests, el
-pipeline DuckDB y el zip de origen.
+`.rscignore` excluye del bundle de rsconnect los tests, `data-raw/` (pipeline
+DuckDB + zip de origen) y `renv/`. El código de build vive en `data-raw/`
+precisamente para que **todo** `R/` y **todo** `data/` sea desplegable.
+
+### Ojo: dos mecanismos de despliegue, dos listas de archivos
+
+- **rsconnect** (`deployApp`, CI, "Publish from GitHub"): empaqueta lo que
+  lista `manifest.json`, respetando `.rscignore`.
+- **Posit Publisher** (botón Deploy de Positron/VS Code): usa **su propia**
+  lista en `.posit/publish/Equal-Earth-Poipoi-IJR5.toml` (`files = [...]`),
+  que incluye `/R/` y `/data/` completos. Commitea `.posit/` — no contiene
+  secretos. Si despliegas con Publisher y la app falla con "No such file or
+  directory", revisa esa lista primero.
 
 ## Notas técnicas
 

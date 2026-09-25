@@ -3572,6 +3572,12 @@
     }
   },
   "files": {
+    ".posit/publish/deployments/deployment-4UFV.toml": {
+      "checksum": "12947e3ac06256c83e3b0e6e97d089e4"
+    },
+    ".posit/publish/Equal-Earth-Poipoi-IJR5.toml": {
+      "checksum": "90a9a9945d30780ba96efc1795d82f94"
+    },
     "app.R": {
       "checksum": "86ffa1bc255a058ca0b1676a43779e8f"
     },
