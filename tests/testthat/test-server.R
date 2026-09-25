@@ -29,6 +29,33 @@ test_that("ratio sentence handles equal-ish and inverted pairs", {
   })
 })
 
+test_that("overlay shapes and limits react to selection and toggle", {
+  testServer(app_server, {
+    session$setInputs(c1 = "MEX", c2 = "BRA")
+    expect_length(shapes(), 2)
+
+    session$setInputs(overlay_fit = FALSE)
+    l <- overlay_lims()
+    expect_type(l, "list")
+    expect_equal(l$x[1], -l$x[2])
+
+    session$setInputs(overlay_fit = TRUE)
+    expect_null(overlay_lims())
+  })
+})
+
+test_that("overlay panel renders a PNG and the inflation callout", {
+  s <- shiny::reactive(overlay_shapes(world[world$country_id == "MEX", ]))
+  testServer(
+    overlay_panel_server,
+    args = list(shapes = s, color = country_colors[1], lims = shiny::reactive(NULL)),
+    {
+      expect_match(output$plot$src, "^data:image/png")
+      expect_match(output$inflate$html, "aparece")
+    }
+  )
+})
+
 test_that("map_panel module renders a PNG under both projections", {
   sel <- shiny::reactive(
     world |> dplyr::filter(country_id %in% c("MEX", "BRA"))

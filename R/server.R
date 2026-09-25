@@ -19,6 +19,25 @@ app_server <- function(input, output, session) {
   map_panel_server("merc", backdrop, selected, crs = 3395)
   map_panel_server("eq", backdrop, selected, crs = 8857)
 
+  # "Superposición" section: one overlay per country, computed once and
+  # shared between the two panels
+  shapes <- shiny::reactive({
+    sel <- selected()
+    shiny::req(nrow(sel) == 2)
+    lapply(seq_len(2), function(i) overlay_shapes(sel[i, ]))
+  })
+
+  overlay_lims <- shiny::reactive({
+    if (isTRUE(input$overlay_fit)) {
+      NULL  # each panel zooms to its own country
+    } else {
+      overlay_limits(shapes())  # shared scale: same km per pixel
+    }
+  })
+
+  overlay_panel_server("ov1", shiny::reactive(shapes()[[1]]), country_colors[1], overlay_lims)
+  overlay_panel_server("ov2", shiny::reactive(shapes()[[2]]), country_colors[2], overlay_lims)
+
   output$title_info <- shiny::renderText({
     sel <- selected()
     sprintf(
@@ -37,6 +56,11 @@ app_server <- function(input, output, session) {
   shiny::exportTestValues(
     countries = selected()$name_display,
     areas_km2 = round(selected()$area_km2),
-    ratio = ratio_sentence(selected())
+    ratio = ratio_sentence(selected()),
+    inflation = vapply(
+      shapes(),
+      function(s) round(s$inflation[1], 2),
+      numeric(1)
+    )
   )
 }

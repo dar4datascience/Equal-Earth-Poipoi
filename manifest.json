@@ -3573,13 +3573,13 @@
   },
   "files": {
     ".posit/publish/deployments/deployment-4UFV.toml": {
-      "checksum": "12947e3ac06256c83e3b0e6e97d089e4"
+      "checksum": "df6710516060b60bc4983882c6ac7bd4"
     },
     ".posit/publish/Equal-Earth-Poipoi-IJR5.toml": {
       "checksum": "90a9a9945d30780ba96efc1795d82f94"
     },
     "app.R": {
-      "checksum": "86ffa1bc255a058ca0b1676a43779e8f"
+      "checksum": "135f93b1915e39cf63884c3eafca67e1"
     },
     "data/countries.rds": {
       "checksum": "e1b28ef4e710d342a409d8df247b9172"
@@ -3590,14 +3590,20 @@
     "R/mod_map_panel.R": {
       "checksum": "f4bedb6d48e14d0f91621e916f23ec83"
     },
+    "R/mod_overlay_panel.R": {
+      "checksum": "aad8a602e3acbcceae1df15a6155abed"
+    },
+    "R/overlay.R": {
+      "checksum": "463480661302e221d064d9ec8a80d520"
+    },
     "R/server.R": {
-      "checksum": "70c821b74c26d215b2119d34e2d75f97"
+      "checksum": "ae216a990c4353cf45a76d24ada14fc7"
     },
     "R/sys_deps.R": {
       "checksum": "e471ae3c09685d555f4193fcf05ec046"
     },
     "R/theme.R": {
-      "checksum": "07c8b6ff710c036806c8de833d47dad4"
+      "checksum": "6580861b52d7dff26cc9ef3e92cb2ec2"
     },
     "renv.lock": {
       "checksum": "e2356b7a08113192e5869e247e8c2730"

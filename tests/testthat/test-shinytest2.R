@@ -45,6 +45,31 @@ test_that("app launches, selects countries, and swaps", {
   vals <- app$get_values(export = TRUE)
   expect_equal(vals$export$countries, c("Francia", "Japón"))
 
+  # ---- Superposición tab -------------------------------------------------
+  app$set_inputs(nav = "Superposición")
+  app$wait_for_idle()
+
+  vals <- app$get_values(export = TRUE)
+  expect_length(vals$export$inflation, 2)
+
+  ov <- app$get_values(output = c("ov1-plot", "ov2-plot"))$output
+  expect_match(ov[["ov1-plot"]]$src, "^data:image/png")
+  expect_match(ov[["ov2-plot"]]$src, "^data:image/png")
+  # two different countries → different overlays
+  expect_false(identical(ov[["ov1-plot"]]$src, ov[["ov2-plot"]]$src))
+
+  # toggling per-panel zoom re-renders the plots
+  before <- ov[["ov1-plot"]]$src
+  app$set_inputs(overlay_fit = TRUE)
+  app$wait_for_idle()
+  ov <- app$get_values(output = c("ov1-plot", "ov2-plot"))$output
+  expect_false(identical(ov[["ov1-plot"]]$src, before))
+  app$set_inputs(overlay_fit = FALSE)
+
+  # back to the first tab for the snapshot
+  app$set_inputs(nav = "Mapas")
+  app$wait_for_idle()
+
   # pixel snapshots depend on local fonts/rendering — keep them local-only
   if (!isTRUE(as.logical(Sys.getenv("CI", "false")))) {
     app$expect_screenshot()

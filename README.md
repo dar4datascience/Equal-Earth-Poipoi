@@ -9,6 +9,15 @@ usuario bajo dos proyecciones cartográficas:
 Una tercera columna muestra la superficie real de cada país (km²) y la razón
 entre ambas ("Brasil es 4,3× más grande que México").
 
+La sección **Superposición** dibuja el contorno de cada país en Mercator
+(trazo punteado) sobre su forma real en Equal Earth, centrados en el mismo
+punto: la diferencia de tamaño es exactamente la inflación de Mercator, que
+se muestra como número grande (p. ej. Rusia 4,9×, Groenlandia ~16×). Ambas
+proyecciones se centran en el meridiano del propio país (`+lon_0=λ`), lo que
+además evita que Rusia o Fiyi se partan por el antimeridiano. Un interruptor
+cambia entre escala compartida (mismos km por píxel en los dos paneles) y
+zoom propio por país.
+
 ## Arquitectura
 
 ```
@@ -28,6 +37,7 @@ carga extensiones.
 | `R/server.R` | lógica del servidor (`app_server`) |
 | `R/mod_map_panel.R` | módulo Shiny del mapa (se usa 2 veces) |
 | `R/info_card.R` | tarjeta de comparación (value boxes + razón) |
+| `R/overlay.R`, `R/mod_overlay_panel.R` | sección "Superposición": contornos Mercator + Equal Earth centrados y factor de inflación |
 | `R/theme.R` | tema bslib (preset "shiny", Inter + Space Grotesk, reglas Sass compatibles con modo oscuro) |
 | `data-raw/data_prep.R`, `data-raw/prep_data.R` | pipeline DuckDB → `data/countries.rds` (solo build, no se despliega) |
 | `tests/testthat/` | `testServer()`, integridad de datos, E2E `shinytest2` |

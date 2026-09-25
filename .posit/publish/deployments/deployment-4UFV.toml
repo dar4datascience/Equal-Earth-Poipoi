@@ -10,12 +10,18 @@ id = "01a0d67a-ee27-1f9e-1bd8-18a09de36d01"
 dashboard_url = "https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01"
 direct_url = "https://01a0d67a-ee27-1f9e-1bd8-18a09de36d01.share.connect.posit.cloud"
 logs_url = "https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01/history"
-deployed_at = "2026-09-25T02:53:02.142Z"
-bundle_id = "01a0d67a-ee2b-0003-1977-72f4708287a9"
+deployed_at = "2026-09-25T03:19:03.548Z"
+bundle_id = "01a0d692-aeb6-5964-e2d6-19a98d7447a0"
 files = [
     ".posit/publish/Equal-Earth-Poipoi-IJR5.toml",
     ".posit/publish/deployments/deployment-4UFV.toml",
+    "R/info_card.R",
+    "R/mod_map_panel.R",
+    "R/server.R",
+    "R/sys_deps.R",
+    "R/theme.R",
     "app.R",
+    "data/countries.rds",
     "renv.lock",
 ]
 
@@ -30,6 +36,8 @@ title = "Equal-Earth-Poipoi"
 files = [
     "/app.R",
     "/renv.lock",
+    "/R/",
+    "/data/",
     "/.posit/publish/Equal-Earth-Poipoi-IJR5.toml",
     "/.posit/publish/deployments/deployment-4UFV.toml",
 ]
@@ -3989,9 +3997,4 @@ needs_compilation = "yes"
 author = "Gábor Csárdi [aut, cre], Kuba Podgórski [ctb], Rich Geldreich [ctb], Arm Limited [ctb, cph] (bundled Mbed TLS crypto subset in src/mbedtls/ (Apache-2.0)), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)"
 maintainer = "Gábor Csárdi <csardi.gabor@gmail.com>"
 repository = "RSPM"
-
-[deployment_error]
-code = "deployFailed"
-message = "Runtime error: Unable to start the app due to a runtime error. Please check the logs for more information."
-operation = "publish"
 

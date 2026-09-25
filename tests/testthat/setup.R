@@ -10,7 +10,8 @@ root <- normalizePath(test_path("../.."))
 
 # local = TRUE so the sourced functions close over this environment and can
 # see `world`/`backdrop` inside testServer()
-for (f in c("sys_deps", "mod_map_panel", "info_card", "server")) {
+for (f in c("sys_deps", "mod_map_panel", "info_card", "overlay",
+            "mod_overlay_panel", "theme", "server")) {
   source(file.path(root, "R", paste0(f, ".R")), local = TRUE)
 }
 

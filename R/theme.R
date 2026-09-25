@@ -133,6 +133,35 @@ app_theme <- function() {
         );
       }
 
+      /* ---- overlay legend --------------------------------------------- */
+      .overlay-legend {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .875rem;
+        color: var(--bs-secondary-color);
+      }
+      .swatch {
+        display: inline-block;
+        width: 1.6rem;
+        height: 1rem;
+        border-radius: .2rem;
+      }
+      .swatch-dashed {
+        border: 1.5px dashed var(--bs-secondary-color);
+        background: transparent;
+      }
+      .swatch-solid {
+        border: 1.5px solid var(--bs-secondary-color);
+        background: var(--bs-secondary-color);
+        opacity: .5;
+      }
+
+      /* ---- nav tabs ----------------------------------------------------- */
+      .navbar .nav-link {
+        font-weight: 500;
+      }
+
       /* ---- explainer --------------------------------------------------- */
       .explainer p:last-child { margin-bottom: 0; }
     ")

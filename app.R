@@ -6,7 +6,8 @@ library(dplyr)
 
 # local = TRUE: runApp() evaluates app.R in its own environment, so the
 # helpers must be defined here to close over `world`/`backdrop` below.
-for (f in c("sys_deps", "mod_map_panel", "info_card", "theme", "server")) {
+for (f in c("sys_deps", "mod_map_panel", "info_card", "overlay",
+            "mod_overlay_panel", "theme", "server")) {
   source(file.path("R", paste0(f, ".R")), local = TRUE)
 }
 
@@ -23,7 +24,40 @@ country_label <- function(text, color) {
   )
 }
 
-ui <- bslib::page_sidebar(
+app_sidebar <- bslib::sidebar(
+  width = 280,
+  shiny::p(
+    class = "sidebar-intro",
+    "Elige dos países y compara cómo cambia su tamaño aparente entre una",
+    "proyección conforme y una de áreas equivalentes."
+  ),
+  shiny::selectizeInput(
+    "c1", country_label("País 1", country_colors[1]),
+    choices = country_choices,
+    selected = "MEX"
+  ),
+  shiny::selectizeInput(
+    "c2", country_label("País 2", country_colors[2]),
+    choices = country_choices,
+    selected = "BRA"
+  ),
+  shiny::actionButton(
+    "swap", "Intercambiar",
+    icon = shiny::icon("arrow-right-arrow-left"),
+    class = "btn-outline-primary w-100"
+  ),
+  shiny::div(
+    class = "sidebar-footer mt-auto",
+    shiny::div(
+      class = "d-flex align-items-center justify-content-between mb-2",
+      shiny::span("Modo de color"),
+      bslib::input_dark_mode(id = "color_mode")
+    ),
+    "Datos: Natural Earth 1:110m · áreas calculadas con DuckDB spatial"
+  )
+)
+
+ui <- bslib::page_navbar(
   # single wrapper: the navbar spreads multiple title children apart
   title = shiny::span(
     class = "app-title",
@@ -32,77 +66,100 @@ ui <- bslib::page_sidebar(
     shiny::span(class = "app-title-accent", "vs"),
     "Equal Earth"
   ),
+  id = "nav",
   window_title = "Mercator vs Equal Earth",
-  class = "bslib-page-dashboard",
   # scrolling page: the map row gets an explicit height instead of stretching
   # to the viewport (wide maps in tall cards left lots of empty space)
   fillable = FALSE,
   theme = app_theme(),
-  sidebar = bslib::sidebar(
-    width = 280,
-    shiny::p(
-      class = "sidebar-intro",
-      "Elige dos países y compara cómo cambia su tamaño aparente entre una",
-      "proyección conforme y una de áreas equivalentes."
+  sidebar = app_sidebar,
+
+  bslib::nav_panel(
+    "Mapas",
+    class = "bslib-page-dashboard",
+    icon = bsicons::bs_icon("map"),
+    bslib::layout_columns(
+      col_widths = c(4, 4, 4),
+      height = "460px",
+      class = "mb-4",
+      map_panel_ui("merc", "Mercator", "EPSG:3395", "compass"),
+      map_panel_ui("eq", "Equal Earth", "EPSG:8857", "globe2"),
+      info_card_ui()
     ),
-    shiny::selectizeInput(
-      "c1", country_label("País 1", country_colors[1]),
-      choices = country_choices,
-      selected = "MEX"
-    ),
-    shiny::selectizeInput(
-      "c2", country_label("País 2", country_colors[2]),
-      choices = country_choices,
-      selected = "BRA"
-    ),
-    shiny::actionButton(
-      "swap", "Intercambiar",
-      icon = shiny::icon("arrow-right-arrow-left"),
-      class = "btn-outline-primary w-100"
-    ),
-    shiny::div(
-      class = "sidebar-footer mt-auto",
-      shiny::div(
-        class = "d-flex align-items-center justify-content-between mb-2",
-        shiny::span("Modo de color"),
-        bslib::input_dark_mode(id = "color_mode")
+    bslib::card(
+      class = "explainer",
+      bslib::card_header(
+        bsicons::bs_icon("lightbulb"),
+        "¿Por qué Mercator distorsiona las áreas?"
       ),
-      "Datos: Natural Earth 1:110m · áreas calculadas con DuckDB spatial"
+      bslib::layout_column_wrap(
+        width = 1 / 2,
+        fill = FALSE,
+        shiny::div(
+          shiny::h6(bsicons::bs_icon("compass"), " Mercator — conforme"),
+          shiny::p(
+            "Conserva ángulos y rumbos, lo que la hizo ideal para la navegación.",
+            "El precio es que la escala crece con la secante de la latitud, así",
+            "que las áreas se inflan hacia los polos — por eso Groenlandia parece",
+            "del tamaño de África cuando en realidad es ~14 veces menor."
+          )
+        ),
+        shiny::div(
+          shiny::h6(bsicons::bs_icon("globe2"), " Equal Earth — equivalente"),
+          shiny::p(
+            "Cada porción del mapa representa la misma superficie real. Al",
+            "comparar los dos mapas, un país cercano al ecuador apenas cambia,",
+            "mientras que uno en latitudes altas se encoge drásticamente."
+          )
+        )
+      )
     )
   ),
-  bslib::layout_columns(
-    col_widths = c(4, 4, 4),
-    height = "460px",
-    class = "mb-4",
-    map_panel_ui("merc", "Mercator", "EPSG:3395", "compass"),
-    map_panel_ui("eq", "Equal Earth", "EPSG:8857", "globe2"),
-    info_card_ui()
-  ),
-  bslib::card(
-    class = "explainer",
-    bslib::card_header(
-      bsicons::bs_icon("lightbulb"),
-      "¿Por qué Mercator distorsiona las áreas?"
+
+  bslib::nav_panel(
+    "Superposición",
+    class = "bslib-page-dashboard",
+    icon = bsicons::bs_icon("layers"),
+    bslib::layout_columns(
+      col_widths = 12,
+      class = "mb-4",
+      bslib::card(
+        bslib::card_body(
+          class = "d-flex flex-wrap align-items-center gap-4 py-3",
+          bslib::input_switch(
+            "overlay_fit",
+            "Ajustar cada panel a su país",
+            value = FALSE
+          ),
+          shiny::div(
+            class = "overlay-legend",
+            shiny::span(class = "swatch swatch-dashed"),
+            "Mercator",
+            shiny::span(class = "swatch swatch-solid"),
+            "Equal Earth (al frente)"
+          )
+        )
+      )
     ),
-    bslib::layout_column_wrap(
-      width = 1 / 2,
-      fill = FALSE,
-      shiny::div(
-        shiny::h6(bsicons::bs_icon("compass"), " Mercator — conforme"),
-        shiny::p(
-          "Conserva ángulos y rumbos, lo que la hizo ideal para la navegación.",
-          "El precio es que la escala crece con la secante de la latitud, así",
-          "que las áreas se inflan hacia los polos — por eso Groenlandia parece",
-          "del tamaño de África cuando en realidad es ~14 veces menor."
-        )
+    bslib::layout_columns(
+      col_widths = c(6, 6),
+      height = "520px",
+      overlay_panel_ui("ov1", country_colors[1]),
+      overlay_panel_ui("ov2", country_colors[2])
+    ),
+    bslib::card(
+      class = "explainer mt-4",
+      bslib::card_header(
+        bsicons::bs_icon("lightbulb"),
+        "Cómo leer la superposición"
       ),
-      shiny::div(
-        shiny::h6(bsicons::bs_icon("globe2"), " Equal Earth — equivalente"),
-        shiny::p(
-          "Cada porción del mapa representa la misma superficie real. Al",
-          "comparar los dos mapas, un país cercano al ecuador apenas cambia,",
-          "mientras que uno en latitudes altas se encoge drásticamente."
-        )
+      shiny::p(
+        "Mismo país, dos proyecciones, mismo centro. El contorno punteado es",
+        "Mercator; la forma rellena es Equal Earth, que conserva las áreas.",
+        "La diferencia de tamaño entre ambos es exactamente la distorsión de",
+        "Mercator: con \"escala compartida\" también comparas los dos países",
+        "entre sí, y con \"ajustar cada panel\" ves la forma de cada uno",
+        "de cerca."
       )
     )
   )
