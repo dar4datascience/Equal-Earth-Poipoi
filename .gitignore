@@ -1,0 +1,7 @@
+.Rproj.user/
+.Rhistory
+.RData
+.Renviron
+*.Rproj
+rsconnect/
+tests/testthat/_snaps/**/*.new.png

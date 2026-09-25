@@ -1,0 +1,8 @@
+tests
+data-raw
+renv
+.github
+.Rprofile
+README.md
+AGENTS.md
+LICENSE

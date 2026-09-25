@@ -42,5 +42,8 @@ test_that("app launches, selects countries, and swaps", {
   vals <- app$get_values(export = TRUE)
   expect_equal(vals$export$countries, c("Francia", "Japón"))
 
-  app$expect_screenshot()
+  # pixel snapshots depend on local fonts/rendering — keep them local-only
+  if (!isTRUE(as.logical(Sys.getenv("CI", "false")))) {
+    app$expect_screenshot()
+  }
 })
