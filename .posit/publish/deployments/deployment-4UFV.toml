@@ -10,12 +10,13 @@ id = "01a0d67a-ee27-1f9e-1bd8-18a09de36d01"
 dashboard_url = "https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01"
 direct_url = "https://01a0d67a-ee27-1f9e-1bd8-18a09de36d01.share.connect.posit.cloud"
 logs_url = "https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01/history"
-deployed_at = "2026-09-25T04:37:40.656Z"
-bundle_id = "01a0d6da-a743-8840-53e9-51cac4a00603"
+deployed_at = "2026-09-26T01:31:39.222Z"
+bundle_id = "01a0db56-b507-5566-f675-3f3be0cdbbe4"
 files = [
     ".posit/publish/Equal-Earth-Poipoi-IJR5.toml",
     ".posit/publish/deployments/deployment-4UFV.toml",
     "R/info_card.R",
+    "R/latam.R",
     "R/mod_map_panel.R",
     "R/mod_overlay_panel.R",
     "R/overlay.R",
