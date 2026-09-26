@@ -3579,7 +3579,7 @@
       "checksum": "90a9a9945d30780ba96efc1795d82f94"
     },
     "app.R": {
-      "checksum": "47115ebfb84b6474057d3228f1bfe6af"
+      "checksum": "a324fc8b832e05b11355b38901e82427"
     },
     "data/countries.rds": {
       "checksum": "e1b28ef4e710d342a409d8df247b9172"
@@ -3594,13 +3594,13 @@
       "checksum": "f4bedb6d48e14d0f91621e916f23ec83"
     },
     "R/mod_overlay_panel.R": {
-      "checksum": "aad8a602e3acbcceae1df15a6155abed"
+      "checksum": "5ca9fe016e457dba8bb9ed9113f2065d"
     },
     "R/overlay.R": {
       "checksum": "463480661302e221d064d9ec8a80d520"
     },
     "R/server.R": {
-      "checksum": "cb511f661fccda7e7832c8527784bcfc"
+      "checksum": "c1a540224feaebd0cb395563878a2fa7"
     },
     "R/sys_deps.R": {
       "checksum": "e471ae3c09685d555f4193fcf05ec046"

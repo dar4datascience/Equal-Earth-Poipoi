@@ -33,6 +33,14 @@ test_that("Mercator shrinks the real ~2x gap to almost nothing", {
   expect_gt(inflation[2], inflation[1])
 })
 
+test_that("overlay inflation agrees with the card's Mercator areas", {
+  infl <- vapply(seq_len(2), function(i) overlay_shapes(latam[i, ])$inflation[1], numeric(1))
+  # overlay uses a Mercator centred on each bloc's meridian; scale depends only
+  # on latitude, so it must match the EPSG:3395 areas behind the card
+  expect_equal(infl, latam$merc_area_km2 / latam$area_km2, tolerance = 0.01)
+  expect_gt(infl[2], infl[1])
+})
+
 test_that("sentences name the bigger bloc first", {
   expect_match(ratio_sentence(latam), "Latinoamérica es 2,1× más grande que Estados Unidos")
   expect_match(mercator_ratio_sentence(latam), "En Mercator, Latinoamérica parece solo 1,1×")

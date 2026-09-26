@@ -2,6 +2,27 @@
 # superposed, with its Mercator inflation callout. Used twice (one per
 # selected country) — the two instances share the limits reactive.
 
+# Toolbar above a pair of overlay panels: zoom switch + projection legend.
+overlay_controls <- function(switch_id, switch_label) {
+  bslib::layout_columns(
+    col_widths = 12,
+    class = "mb-4",
+    bslib::card(
+      bslib::card_body(
+        class = "d-flex flex-wrap align-items-center gap-4 py-3",
+        bslib::input_switch(switch_id, switch_label, value = FALSE),
+        shiny::div(
+          class = "overlay-legend",
+          shiny::span(class = "swatch swatch-dashed"),
+          "Mercator",
+          shiny::span(class = "swatch swatch-solid"),
+          "Equal Earth (al frente)"
+        )
+      )
+    )
+  )
+}
+
 overlay_panel_ui <- function(id, color) {
   ns <- shiny::NS(id)
   bslib::card(
@@ -29,9 +50,10 @@ overlay_panel_server <- function(id, shapes, color, lims) {
       )),
       bg = "transparent"
     ) |>
-      # key on the country's id + limits (they decide the image), not the
-      # shapes object itself
-      shiny::bindCache(shapes()$country_id[1], lims(), cache = "app")
+      # key on the country's id + limits + colour (they decide the image), not
+      # the shapes object itself. Colour matters: the same country can be
+      # drawn blue or red depending on the panel/tab.
+      shiny::bindCache(shapes()$country_id[1], lims(), color, cache = "app")
     output$inflate <- shiny::renderUI(
       shiny::div(
         class = "ratio-callout",

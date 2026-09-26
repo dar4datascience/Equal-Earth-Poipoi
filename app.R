@@ -121,27 +121,7 @@ ui <- bslib::page_navbar(
     "Superposición",
     class = "bslib-page-dashboard",
     icon = bsicons::bs_icon("layers"),
-    bslib::layout_columns(
-      col_widths = 12,
-      class = "mb-4",
-      bslib::card(
-        bslib::card_body(
-          class = "d-flex flex-wrap align-items-center gap-4 py-3",
-          bslib::input_switch(
-            "overlay_fit",
-            "Ajustar cada panel a su país",
-            value = FALSE
-          ),
-          shiny::div(
-            class = "overlay-legend",
-            shiny::span(class = "swatch swatch-dashed"),
-            "Mercator",
-            shiny::span(class = "swatch swatch-solid"),
-            "Equal Earth (al frente)"
-          )
-        )
-      )
-    ),
+    overlay_controls("overlay_fit", "Ajustar cada panel a su país"),
     bslib::layout_columns(
       col_widths = c(6, 6),
       height = "520px",
@@ -169,31 +149,37 @@ ui <- bslib::page_navbar(
     "Latinoamérica vs EE. UU.",
     class = "bslib-page-dashboard",
     icon = bsicons::bs_icon("globe-americas"),
+    overlay_controls("latam_fit", "Ajustar cada panel a su bloque"),
     bslib::layout_columns(
-      col_widths = c(4, 4, 4),
-      height = "460px",
+      col_widths = c(6, 6),
+      height = "520px",
       class = "mb-4",
-      map_panel_ui("lat_merc", "Mercator", "EPSG:3395", "compass"),
-      map_panel_ui("lat_eq", "Equal Earth", "EPSG:8857", "globe2"),
-      latam_card_ui(latam)
+      overlay_panel_ui("lat_ov1", country_colors[1]),
+      overlay_panel_ui("lat_ov2", country_colors[2])
     ),
-    bslib::card(
-      class = "explainer",
-      bslib::card_header(
-        bsicons::bs_icon("lightbulb"),
-        "¿Por qué Mercator casi iguala a los dos bloques?"
-      ),
-      shiny::p(
-        "La mayor parte de Latinoamérica está cerca del ecuador, donde Mercator",
-        "apenas distorsiona. Estados Unidos, en cambio, está en latitudes medias",
-        "y Alaska llega al Ártico, así que Mercator lo infla mucho más. El",
-        "resultado: un bloque que en realidad es más del doble de grande parece",
-        "casi del mismo tamaño."
-      ),
-      shiny::p(
-        class = "small text-body-secondary",
-        shiny::strong("Países incluidos: "),
-        paste0(paste(latam_member_names(world), collapse = ", "), ".")
+    bslib::layout_columns(
+      col_widths = c(5, 7),
+      latam_card_ui(latam),
+      bslib::card(
+        class = "explainer",
+        bslib::card_header(
+          bsicons::bs_icon("lightbulb"),
+          "¿Por qué Mercator casi iguala a los dos bloques?"
+        ),
+        shiny::p(
+          "Cada panel superpone el mismo bloque en las dos proyecciones, con el",
+          "mismo centro: el contorno punteado es Mercator y la forma rellena es",
+          "Equal Earth, que conserva las áreas. La mayor parte de Latinoamérica",
+          "está cerca del ecuador, donde Mercator apenas distorsiona. Estados",
+          "Unidos, en cambio, está en latitudes medias y Alaska llega al Ártico,",
+          "así que Mercator lo infla mucho más. El resultado: un bloque que en",
+          "realidad es más del doble de grande parece casi del mismo tamaño."
+        ),
+        shiny::p(
+          class = "small text-body-secondary",
+          shiny::strong("Países incluidos: "),
+          paste0(paste(latam_member_names(world), collapse = ", "), ".")
+        )
       )
     )
   )

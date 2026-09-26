@@ -73,25 +73,47 @@ test_that("map_panel module renders a PNG under both projections", {
   }
 })
 
-test_that("map_panel module renders the Latinoamérica vs EE. UU. bloc", {
-  for (crs in c(3395, 8857)) {
-    testServer(
-      map_panel_server,
-      args = list(backdrop = backdrop, selected = shiny::reactive(latam), crs = crs),
-      {
-        expect_match(output$map$src, "^data:image/png")
-        expect_match(output$map$alt, "Latinoamérica y Estados Unidos")
-      }
-    )
-  }
+test_that("overlay panel renders the Latinoamérica bloc", {
+  s <- shiny::reactive(overlay_shapes(latam[1, ]))
+  testServer(
+    overlay_panel_server,
+    args = list(shapes = s, color = country_colors[1], lims = shiny::reactive(NULL)),
+    {
+      expect_equal(output$name, "Latinoamérica")
+      expect_match(output$plot$src, "^data:image/png")
+      expect_match(output$plot$alt, "Superposición de Latinoamérica")
+      expect_match(output$inflate$html, "aparece 1,2×")
+    }
+  )
 })
 
-test_that("app_server wires the latam maps and exports the ratio", {
+test_that("latam overlays share limits unless each panel fits its bloc", {
   testServer(app_server, {
     session$setInputs(c1 = "MEX", c2 = "BRA")
-    expect_match(output[["lat_merc-map"]]$src, "^data:image/png")
-    expect_match(output[["lat_eq-map"]]$src, "^data:image/png")
-    expect_match(ratio_sentence(latam), "Latinoamérica")
+    expect_equal(vapply(latam_shapes(), \(s) s$country_id[1], ""), c("LATAM", "USA"))
+
+    session$setInputs(latam_fit = FALSE)
+    l <- latam_lims()
+    expect_equal(l$x[1], -l$x[2])
+    expect_equal(l$y[1], -l$y[2])
+
+    session$setInputs(latam_fit = TRUE)
+    expect_null(latam_lims())
+
+    # the latam switch is independent of the Superposición one
+    session$setInputs(overlay_fit = FALSE)
+    expect_null(latam_lims())
+    expect_type(overlay_lims(), "list")
+  })
+})
+
+test_that("app_server renders both latam overlay panels", {
+  testServer(app_server, {
+    session$setInputs(c1 = "MEX", c2 = "BRA", latam_fit = FALSE)
+    expect_match(output[["lat_ov1-plot"]]$src, "^data:image/png")
+    expect_match(output[["lat_ov2-plot"]]$src, "^data:image/png")
+    expect_equal(output[["lat_ov1-name"]], "Latinoamérica")
+    expect_equal(output[["lat_ov2-name"]], "Estados Unidos")
   })
 })
 

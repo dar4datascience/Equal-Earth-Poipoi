@@ -70,10 +70,19 @@ test_that("app launches, selects countries, and swaps", {
   app$set_inputs(nav = "Latinoamérica vs EE. UU.")
   app$wait_for_idle()
 
-  lat <- app$get_values(output = c("lat_merc-map", "lat_eq-map"))$output
-  expect_match(lat[["lat_merc-map"]]$src, "^data:image/png")
-  expect_match(lat[["lat_eq-map"]]$src, "^data:image/png")
-  expect_false(identical(lat[["lat_merc-map"]]$src, lat[["lat_eq-map"]]$src))
+  lat <- app$get_values(output = c("lat_ov1-plot", "lat_ov2-plot"))$output
+  expect_match(lat[["lat_ov1-plot"]]$src, "^data:image/png")
+  expect_match(lat[["lat_ov2-plot"]]$src, "^data:image/png")
+  expect_false(identical(lat[["lat_ov1-plot"]]$src, lat[["lat_ov2-plot"]]$src))
+  expect_length(app$get_values(export = TRUE)$export$latam_inflation, 2)
+
+  # per-bloc zoom re-renders the overlays
+  before <- lat[["lat_ov1-plot"]]$src
+  app$set_inputs(latam_fit = TRUE)
+  app$wait_for_idle()
+  after <- app$get_values(output = "lat_ov1-plot")$output[["lat_ov1-plot"]]$src
+  expect_false(identical(after, before))
+  app$set_inputs(latam_fit = FALSE)
 
   # the static card renders both ratios, independent of the sidebar pair
   card <- app$get_text(".latam-card")

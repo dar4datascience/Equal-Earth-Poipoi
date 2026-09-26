@@ -38,10 +38,19 @@ app_server <- function(input, output, session) {
   overlay_panel_server("ov1", shiny::reactive(shapes()[[1]]), country_colors[1], overlay_lims)
   overlay_panel_server("ov2", shiny::reactive(shapes()[[2]]), country_colors[2], overlay_lims)
 
-  # "Latinoamérica vs EE. UU." section: static bloc, same map module
-  latam_r <- shiny::reactive(latam)
-  map_panel_server("lat_merc", backdrop, latam_r, crs = 3395)
-  map_panel_server("lat_eq", backdrop, latam_r, crs = 8857)
+  # "Latinoamérica vs EE. UU." section: same overlay module, one panel per
+  # bloc. The bloc is static; the reactive only defers the projection work
+  # until the tab is first shown.
+  latam_shapes <- shiny::reactive(
+    lapply(seq_len(nrow(latam)), function(i) overlay_shapes(latam[i, ]))
+  )
+
+  latam_lims <- shiny::reactive({
+    if (isTRUE(input$latam_fit)) NULL else overlay_limits(latam_shapes())
+  })
+
+  overlay_panel_server("lat_ov1", shiny::reactive(latam_shapes()[[1]]), country_colors[1], latam_lims)
+  overlay_panel_server("lat_ov2", shiny::reactive(latam_shapes()[[2]]), country_colors[2], latam_lims)
 
   output$title_info <- shiny::renderText({
     sel <- selected()
@@ -67,6 +76,11 @@ app_server <- function(input, output, session) {
       function(s) round(s$inflation[1], 2),
       numeric(1)
     ),
-    latam_ratio = ratio_sentence(latam)
+    latam_ratio = ratio_sentence(latam),
+    latam_inflation = vapply(
+      latam_shapes(),
+      function(s) round(s$inflation[1], 2),
+      numeric(1)
+    )
   )
 }

@@ -21,8 +21,9 @@ zoom propio por país.
 La sección **Latinoamérica vs EE. UU.** une los 21 países de habla hispana,
 portuguesa y francesa (México, Centroamérica sin Belice, Cuba, República
 Dominicana, Haití, Puerto Rico y Sudamérica sin Guyana, Surinam ni Malvinas)
-en un solo bloque y lo compara con Estados Unidos: en realidad es 2,1× más
-grande, pero en Mercator parece solo 1,1× más grande.
+en un solo bloque y lo compara con Estados Unidos con la misma superposición
+Mercator/Equal Earth (un panel por bloque): en realidad es 2,1× más grande,
+pero en Mercator parece solo 1,1× más grande.
 
 ## Arquitectura
 
@@ -44,7 +45,7 @@ carga extensiones.
 | `R/mod_map_panel.R` | módulo Shiny del mapa (se usa 2 veces) |
 | `R/info_card.R` | tarjeta de comparación (value boxes + razón) |
 | `R/overlay.R`, `R/mod_overlay_panel.R` | sección "Superposición": contornos Mercator + Equal Earth centrados y factor de inflación |
-| `R/latam.R` | sección "Latinoamérica vs EE. UU.": bloque unido, áreas reales vs aparentes en Mercator |
+| `R/latam.R` | sección "Latinoamérica vs EE. UU.": bloque unido (reutiliza el módulo de superposición), áreas reales vs aparentes en Mercator |
 | `R/theme.R` | tema bslib (preset "shiny", Inter + Space Grotesk, reglas Sass compatibles con modo oscuro) |
 | `data-raw/data_prep.R`, `data-raw/prep_data.R` | pipeline DuckDB → `data/countries.rds` (solo build, no se despliega) |
 | `tests/testthat/` | `testServer()`, integridad de datos, E2E `shinytest2` |
