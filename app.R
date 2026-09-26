@@ -7,7 +7,7 @@ library(dplyr)
 # local = TRUE: runApp() evaluates app.R in its own environment, so the
 # helpers must be defined here to close over `world`/`backdrop` below.
 for (f in c("sys_deps", "mod_map_panel", "info_card", "overlay",
-            "mod_overlay_panel", "theme", "server")) {
+            "mod_overlay_panel", "latam", "theme", "server")) {
   source(file.path("R", paste0(f, ".R")), local = TRUE)
 }
 
@@ -16,6 +16,7 @@ world <- readRDS("data/countries.rds")
 # diverges to infinity at the poles, so it can't be framed or compared.
 backdrop <- world |> dplyr::filter(NAME != "Antarctica")
 country_choices <- stats::setNames(backdrop$country_id, backdrop$name_display)
+latam <- latam_bloc(world)
 
 country_label <- function(text, color) {
   shiny::tagList(
@@ -160,6 +161,39 @@ ui <- bslib::page_navbar(
         "Mercator: con \"escala compartida\" también comparas los dos países",
         "entre sí, y con \"ajustar cada panel\" ves la forma de cada uno",
         "de cerca."
+      )
+    )
+  ),
+
+  bslib::nav_panel(
+    "Latinoamérica vs EE. UU.",
+    class = "bslib-page-dashboard",
+    icon = bsicons::bs_icon("globe-americas"),
+    bslib::layout_columns(
+      col_widths = c(4, 4, 4),
+      height = "460px",
+      class = "mb-4",
+      map_panel_ui("lat_merc", "Mercator", "EPSG:3395", "compass"),
+      map_panel_ui("lat_eq", "Equal Earth", "EPSG:8857", "globe2"),
+      latam_card_ui(latam)
+    ),
+    bslib::card(
+      class = "explainer",
+      bslib::card_header(
+        bsicons::bs_icon("lightbulb"),
+        "¿Por qué Mercator casi iguala a los dos bloques?"
+      ),
+      shiny::p(
+        "La mayor parte de Latinoamérica está cerca del ecuador, donde Mercator",
+        "apenas distorsiona. Estados Unidos, en cambio, está en latitudes medias",
+        "y Alaska llega al Ártico, así que Mercator lo infla mucho más. El",
+        "resultado: un bloque que en realidad es más del doble de grande parece",
+        "casi del mismo tamaño."
+      ),
+      shiny::p(
+        class = "small text-body-secondary",
+        shiny::strong("Países incluidos: "),
+        paste0(paste(latam_member_names(world), collapse = ", "), ".")
       )
     )
   )

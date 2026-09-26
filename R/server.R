@@ -1,5 +1,5 @@
 # Server logic — separate from app.R so testServer() can drive it.
-# Uses the app-level globals `world` and `backdrop` (defined in app.R,
+# Uses the app-level globals `world`, `backdrop` and `latam` (defined in app.R,
 # and in tests/testthat/setup.R for the test suite).
 
 app_server <- function(input, output, session) {
@@ -38,6 +38,11 @@ app_server <- function(input, output, session) {
   overlay_panel_server("ov1", shiny::reactive(shapes()[[1]]), country_colors[1], overlay_lims)
   overlay_panel_server("ov2", shiny::reactive(shapes()[[2]]), country_colors[2], overlay_lims)
 
+  # "Latinoamérica vs EE. UU." section: static bloc, same map module
+  latam_r <- shiny::reactive(latam)
+  map_panel_server("lat_merc", backdrop, latam_r, crs = 3395)
+  map_panel_server("lat_eq", backdrop, latam_r, crs = 8857)
+
   output$title_info <- shiny::renderText({
     sel <- selected()
     sprintf(
@@ -61,6 +66,7 @@ app_server <- function(input, output, session) {
       shapes(),
       function(s) round(s$inflation[1], 2),
       numeric(1)
-    )
+    ),
+    latam_ratio = ratio_sentence(latam)
   )
 }

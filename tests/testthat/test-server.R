@@ -73,6 +73,28 @@ test_that("map_panel module renders a PNG under both projections", {
   }
 })
 
+test_that("map_panel module renders the Latinoamérica vs EE. UU. bloc", {
+  for (crs in c(3395, 8857)) {
+    testServer(
+      map_panel_server,
+      args = list(backdrop = backdrop, selected = shiny::reactive(latam), crs = crs),
+      {
+        expect_match(output$map$src, "^data:image/png")
+        expect_match(output$map$alt, "Latinoamérica y Estados Unidos")
+      }
+    )
+  }
+})
+
+test_that("app_server wires the latam maps and exports the ratio", {
+  testServer(app_server, {
+    session$setInputs(c1 = "MEX", c2 = "BRA")
+    expect_match(output[["lat_merc-map"]]$src, "^data:image/png")
+    expect_match(output[["lat_eq-map"]]$src, "^data:image/png")
+    expect_match(ratio_sentence(latam), "Latinoamérica")
+  })
+})
+
 test_that("build_map carries the spec's palette and no axes", {
   sel <- world |> dplyr::filter(country_id %in% c("MEX", "BRA"))
   p <- build_map(backdrop, sel, crs = 8857)

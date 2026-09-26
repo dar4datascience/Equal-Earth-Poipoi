@@ -121,6 +121,25 @@ app_theme <- function() {
         background-clip: text;
         color: transparent;
       }
+      .ratio-callout .ratio-label {
+        font-size: .75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--bs-secondary-color);
+        margin-bottom: .35rem;
+      }
+      /* latam card: two callouts share the 4/12 column */
+      .latam-card .ratio-callout { padding: .5rem 0 0; }
+      .latam-card .bslib-value-box .value-box-area { padding: .75rem .75rem; }
+      .latam-card .bslib-value-box .value-box-title {
+        font-size: .85rem;
+        overflow-wrap: normal;
+        word-break: normal;
+        white-space: nowrap;
+      }
+      .latam-card .ratio-callout .ratio-number { font-size: clamp(2rem, 3.2vw, 2.75rem); }
+      .latam-card .ratio-callout .ratio-text { font-size: .85rem; }
       .ratio-callout .ratio-text {
         margin-top: .5rem;
         color: var(--bs-secondary-color);

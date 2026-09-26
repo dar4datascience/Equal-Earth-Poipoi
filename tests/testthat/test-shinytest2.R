@@ -66,8 +66,26 @@ test_that("app launches, selects countries, and swaps", {
   expect_false(identical(ov[["ov1-plot"]]$src, before))
   app$set_inputs(overlay_fit = FALSE)
 
+  # ---- Latinoamérica vs EE. UU. tab ----------------------------------------
+  app$set_inputs(nav = "Latinoamérica vs EE. UU.")
+  app$wait_for_idle()
+
+  lat <- app$get_values(output = c("lat_merc-map", "lat_eq-map"))$output
+  expect_match(lat[["lat_merc-map"]]$src, "^data:image/png")
+  expect_match(lat[["lat_eq-map"]]$src, "^data:image/png")
+  expect_false(identical(lat[["lat_merc-map"]]$src, lat[["lat_eq-map"]]$src))
+
+  # the static card renders both ratios, independent of the sidebar pair
+  card <- app$get_text(".latam-card")
+  expect_match(card, "2,1×")
+  expect_match(card, "1,1×")
+  expect_match(app$get_values(export = TRUE)$export$latam_ratio, "Latinoamérica")
+
   # back to the first tab for the snapshot
   app$set_inputs(nav = "Mapas")
+  # input_dark_mode() follows the browser's prefers-color-scheme, which varies
+  # between headless runs — pin dark mode so the screenshot is reproducible
+  app$run_js("document.documentElement.setAttribute('data-bs-theme', 'dark');")
   app$wait_for_idle()
 
   # pixel snapshots depend on local fonts/rendering — keep them local-only
