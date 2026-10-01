@@ -1,5 +1,7 @@
 # Equal-Earth-Poipoi
 
+**[▶ Abrir la app en vivo (Posit Connect Cloud)](https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01)**
+
 Dashboard en **R Shiny** que compara la superficie de dos países elegidos por el
 usuario bajo dos proyecciones cartográficas:
 
@@ -92,6 +94,8 @@ rsconnect::writeManifest(appPrimaryDoc = "app.R")
 El CI falla si `renv.lock` o `manifest.json` quedan desactualizados.
 
 ## Despliegue en Posit Connect Cloud
+
+App publicada: <https://connect.posit.cloud/dar4datascience/content/01a0d67a-ee27-1f9e-1bd8-18a09de36d01>
 
 **Recomendado — Publicar desde GitHub (sin secretos):**
 
